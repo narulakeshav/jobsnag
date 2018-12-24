@@ -17,6 +17,7 @@ import { Item, Icon, SocialLink, CopyBtn, DeleteBtn } from './styles';
 interface iProps {
   type: string;
   link: string;
+  icon: string;
   removeLink: Function;
 };
 
@@ -42,9 +43,7 @@ const genIcon = (icon: string) => {
  */
 const Field = (props: iProps) => (
   <Item>
-    <Icon {...props}>
-      <i className={genIcon(props.type)} />
-    </Icon>
+    <Icon src={props.icon} />
     <SocialLink href={props.link} target="_blank">{props.link}</SocialLink>
     <CopyToClipboard text={props.link}>
       <CopyBtn><span>Copy</span></CopyBtn>

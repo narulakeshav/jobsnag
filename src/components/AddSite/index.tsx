@@ -23,6 +23,7 @@ interface Data {
 interface Link {
   type: string;
   link: string;
+  icon: string;
 };
 
 interface iProps {
@@ -33,7 +34,9 @@ interface iState {
   value: string;
   link: string;
   type: string;
+  icon: string;
   showBtn: boolean;
+  links: Link[]
 };
 
 // Dropdown Options
@@ -54,7 +57,9 @@ class Input extends React.PureComponent<iProps, iState> {
     value: '',
     link: '',
     type: '',
-    showBtn: false
+    icon: '',
+    showBtn: false,
+    links: [],
   };
 
   /**
@@ -70,8 +75,9 @@ class Input extends React.PureComponent<iProps, iState> {
       const link = links.filter((x: Link) => x.link === url);
       if (link.length === 0) {
         this.setState({
-          value: 'Add this link?',
+          value: 'Add this link as...',
           link: url,
+          icon: tab[0].favIconUrl,
           type: this.getSiteType(url, links),
           showBtn: true,
         });
@@ -90,6 +96,7 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   public componentDidMount = () => {
     chrome.storage.sync.get(['links'], (data: Data) => {
+      this.setState({ links: data.links });
       this.setMountState(data.links);
     });
 
@@ -102,8 +109,27 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   private dataChangeListener = () => {
     chrome.storage.onChanged.addListener((changes) => {
+      this.setState({ links: changes.links.newValue });
       this.setMountState(changes.links.newValue);
     });
+  }
+
+  /**
+   * Returns true If the select dropdown has options
+   * remaining. This is determined by how many of
+   * the items from the dropdown already have a link
+   * attached to them.
+   */
+  private dropdownOptions = () => {
+    const typeExists = this.state.links.map((x: Link) => x.type);
+    const updatedList = DROPDOWN.filter((item) => {
+      return typeExists.indexOf(item.type) === -1;
+    });
+
+    return {
+      exists: updatedList.length > 0,
+      list: updatedList
+    };
   }
 
   /**
@@ -175,34 +201,41 @@ class Input extends React.PureComponent<iProps, iState> {
    * stored (using Chrome .storage API)
    */
   private onAddClick = (): void => {
-    const { link, type } = this.state;
+    const { link, type, icon } = this.state;
     const { addLinkToList } = this.props;
-    addLinkToList({ type, link });
 
-    // Show "Link was Added"
-    this.setState({
-      link: '',
-      value: 'Link was added!',
-      showBtn: false
-    })
+    if (this.dropdownOptions().exists) {
+      addLinkToList({ type, link, icon });
+
+      // Show "Link was Added"
+      this.setState({
+        link: '',
+        value: 'Link was added!',
+        showBtn: false
+      });
+    }
   }
 
   /**
    * Renders the dropdown select option if the
    * current site hasn't already been added.
    */
-  public renderDropdown = () => (
-    (this.state.showBtn)
-      ? (
-        <DropdownOption onChange={this.onOptionSelect} value={this.state.type}>
-          {DROPDOWN.map(item => (
-            <option key={item.label} value={item.type}>
-              {item.label}
-            </option>
-          ))}
-        </DropdownOption>
-      ) : null
-  );
+  public renderDropdown = () => {
+    if (this.state.showBtn) {
+      const dropdown = this.dropdownOptions();
+      return (dropdown.exists)
+        ?  (
+          <DropdownOption onChange={this.onOptionSelect} value={this.state.type}>
+            {dropdown.list.map(item => (
+              <option key={item.label} value={item.type}>{item.label}</option>
+            ))}
+          </DropdownOption>
+        )
+        : <DropdownOption><option>--</option></DropdownOption>
+    } else {
+      return null;
+    }
+  }
 
   /**
    * Renders the "Add" button if the current

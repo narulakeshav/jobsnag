@@ -17,6 +17,7 @@ import Empty from './Empty';
 interface Link {
   type: string;
   link: string;
+  icon: string;
 };
 
 // State
@@ -99,6 +100,7 @@ class App extends React.Component<{}, iState> {
           key={social.type}
           type={social.type}
           link={social.link}
+          icon={social.icon}
           removeLink={this.removeLink}
         />
       ));

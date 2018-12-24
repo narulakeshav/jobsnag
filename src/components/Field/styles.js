@@ -9,7 +9,7 @@ import styled from 'styled-components';
  */
 export const Item = styled.li`
   display: grid;
-  grid-template-columns: 25px 1fr 55px 30px;
+  grid-template-columns: 20px 1fr 55px 30px;
   grid-gap: 0.75rem;
   align-items: center;
   padding: 6px 1rem;
@@ -20,29 +20,8 @@ export const Item = styled.li`
  * Icon
  * @type i
  */
-export const Icon = styled.i`
-  display: flex;
-  background: ${props =>
-    props.type === 'twitter'
-      ? '#1EA1F1'
-      : props.type === 'linkedin'
-      ? '#0177B5'
-      : props.type === 'github'
-      ? '#222222'
-      : props.type === 'facebook'
-      ? '#4268B2'
-      : props.type === 'portfolio'
-      ? '#00D18D'
-      : '#714BF9'};
-  width: 25px;
-  height: 25px;
-  border-radius: 40px;
-
-  i {
-    margin: auto;
-    font-size: 14px;
-    color: #ffffff;
-  }
+export const Icon = styled.img`
+  width: 100%;
 `;
 
 /**
