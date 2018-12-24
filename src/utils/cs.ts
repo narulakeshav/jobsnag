@@ -1,88 +1,89 @@
 /**
- * @TODO: Refactor by using a design pattern.
- * Either prototypal or module pattern
+ * Internal Dependencies
  */
-
-interface Link {
-  type: string;
-  link: string;
-}
+import JobBoard from './boards';
 
 /**
- * Gets the link for a specific site "type"
- *
- * @param {string} type
- * @param {Link[]} links
+ * @name cs.ts
+ * @desc cs or content script that runs within the context
+ * of the DOM and auto-fills fields on the job applications
+ * including LinkedIn, Twitter, GitHub, etc.
  */
-const getLinkFor = (type: string, links: Link[]): string => {
-  const items = links.filter(x => x.type === type);
-  return items.length === 1 ? items[0].link : '';
-};
-
-/**
- * Finds the inputs and set their values for Lever
- * Job Board
- *
- * @param {string} type
- * @param {string} name
- * @param {Link[]} links
- */
-const setWithLever = (type: string, name: string, links: Link[]) => {
-  const link = getLinkFor(type, links);
-  const query = `[name="urls[${name}]"]`;
-  const input: any = document.querySelectorAll(query)[0];
-  if (input && link) {
-    input.value = link;
-    input.style.background = '#FFE470';
-    input.style.borderColor = '#FDBF00';
+const cs = (function() {
+  // Interface
+  interface Link {
+    type: string;
+    link: string;
   }
-};
 
-/**
- * Finds the inputs and set their values for Lever
- * Job Board
- *
- * @param {string} type
- * @param {string} name
- * @param {Link[]} links
- */
-const setWithGreenhouse = (type: string, name: string, links: Link[]) => {
-  const link = getLinkFor(type, links);
-  const query = `[autocomplete="custom-question-${name}"]`;
-  const input: any = document.querySelectorAll(query)[0];
-  if (input && link) {
-    input.value = link;
-    input.style.background = '#FFE470';
-    input.style.borderColor = '#FDBF00';
+  let linksList: Link[] = [];
+
+  /**
+   * Sets the links within this scope
+   * @param {Link[]} links
+   */
+  const setLinks = (links: Link[]): void => {
+    linksList = links;
+  };
+
+  /**
+   * @private getLinksFor
+   * Gets the link for a specific site "type"
+   * @param {string} type
+   */
+  const getLinkFor = (type: string): string => {
+    const link = linksList.filter((i: Link) => i.type === type);
+    return link.length === 1 ? link[0].link : '';
+  };
+
+  /**
+   * @private setConfig
+   * Maps the social site type to input fields on the
+   * job boards.
+   *
+   * @param {string} board
+   * @param {string} type
+   * @param {string} name
+   */
+  const setConfig = (board: string, type: string, name: string): void => {
+    const query = (board === 'greenhouse')
+      ? `[autocomplete="custom-question-${name}"]`
+      : `[name="urls[${name}]"]`;
+
+    const link = getLinkFor(type);
+    const input: any = document.querySelectorAll(query)[0];
+    if (input && link) {
+      input.value = link;
+      input.style.background = '#fff7d6';
+      input.style.borderColor = '#f4dc94';
+    }
   }
-};
 
-/**
- * Fill the input fields for these site types
- * @param {string} board
- * @param {Link[]} links
- */
-const fillApp = (board: string, links: Link[]) => {
-  if (board === 'lever') {
-    setWithLever('linkedin', 'LinkedIn', links);
-    setWithLever('twitter', 'Twitter', links);
-    setWithLever('github', 'GitHub', links);
-    setWithLever('portfolio', 'Portfolio', links);
-    setWithLever('other', 'Other', links);
-  } else if (board === 'greenhouse') {
-    setWithGreenhouse('linkedin', 'linkedin-profile', links);
-    setWithGreenhouse('narulakeshav', 'website', links);
-  }
-};
+  /**
+   * @private fillApp
+   * Fill the input fields for the current board
+   * @param {string} board
+   */
+  const fillApp = (board: string) => {
+    const currentBoard = JobBoard.filter((b) => b.name === board);
+    currentBoard.map((b) => {
+      b.links.map((val) => setConfig(board, val.type, val.name));
+    });
+  };
 
-/**
- * Add a listener which is triggered by the background
- * script.
- */
+  // Return
+  return {
+    fillApp,
+    setLinks,
+  };
+})();
+
+// Run content script
 chrome.runtime.onMessage.addListener(res => {
   if (res) {
     chrome.storage.sync.get(['links'], data => {
-      fillApp(res.site, data.links);
+      cs.setLinks(data.links);
+      cs.fillApp(res.site);
     });
   }
 });
