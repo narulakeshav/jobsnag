@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Sociallink",
+  "version": "1.0.0",
+  "description": "Automatically paste social links in Lever and Greenhouse",
+	"author": "Keshav Narula <narulakeshav13@gmail.com> (http://narulakeshav.com)",
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "icon-16.png",
+      "24": "icon-24.png",
+      "32": "icon-32.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "storage", "webNavigation"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://boards.greenhouse.io/*", "https://jobs.lever.co/*"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
