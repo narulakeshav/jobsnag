@@ -9,9 +9,9 @@ import styled from 'styled-components';
  */
 export const Item = styled.li`
   display: grid;
-  grid-template-columns: 25px 1fr 30px 30px;
+  grid-template-columns: 25px 1fr 55px 30px;
   grid-gap: 0.75rem;
-  align-items: stretch;
+  align-items: center;
   padding: 6px 1rem;
   margin: 4px 0;
 `;
@@ -31,7 +31,7 @@ export const Icon = styled.i`
       ? '#222222'
       : props.type === 'facebook'
       ? '#4268B2'
-      : props.type === 'blog'
+      : props.type === 'portfolio'
       ? '#00D18D'
       : '#714BF9'};
   width: 25px;
@@ -65,16 +65,16 @@ export const SocialLink = styled.a`
  */
 export const CopyBtn = styled.button`
   background: #f5f6fa;
-  border-radius: 50%;
-  width: 30px;
+  border-radius: 50px;
   height: 30px;
   display: flex;
+  padding: 0 0.5rem;
   transition: 0.25s all ease-in;
   cursor: pointer;
 
-  i {
+  span {
     margin: auto;
-    color: #222222;
+    color: #666666;
     font-size: 14px;
     font-weight: 700;
   }
@@ -90,8 +90,12 @@ export const CopyBtn = styled.button`
  */
 export const DeleteBtn = styled(CopyBtn)`
   background: #ffe3ea;
+  width: 30px;
+
   i {
+    margin: auto;
     color: #f62e60;
+    font-size: 14px;
     font-weight: 500;
   }
 

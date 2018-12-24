@@ -47,12 +47,12 @@ const Field = (props: iProps) => (
     </Icon>
     <SocialLink href={props.link} target="_blank">{props.link}</SocialLink>
     <CopyToClipboard text={props.link}>
-      <CopyBtn><i className="fa fa-clone" /></CopyBtn>
+      <CopyBtn><span>Copy</span></CopyBtn>
     </CopyToClipboard>
     <DeleteBtn onClick={() => props.removeLink({
       type: props.type,
       link: props.link
-    })}><i className="fa fa-trash" /></DeleteBtn>
+    })}><i className="fa fa-trash"/></DeleteBtn>
   </Item>
 );
 
