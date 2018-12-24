@@ -24,6 +24,10 @@ const CONFIG = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
+      {
+        test: /\.(png|jpg|jpeg|svg)$/,
+        loader: 'file-loader',
+      },
     ],
   },
   plugins: [
