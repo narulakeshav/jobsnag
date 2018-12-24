@@ -1,7 +1,7 @@
 {
-  "name": "sociallink",
+  "name": "Socialink",
   "version": "0.0.1",
-  "repository": "https://github.com/narulakeshav/sociallink.git",
+  "repository": "https://github.com/narulakeshav/socialink.git",
   "author": "Keshav Narula <narulakeshav13@gmail.com> (https://narulakeshav.com)",
   "license": "MIT",
   "scripts": {
@@ -42,6 +42,7 @@
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-typescript": "^0.14.0",
+    "file-loader": "^3.0.1",
     "prettier": "^1.15.3",
     "react-devtools": "^3.4.3",
     "typescript": "^3.2.2",
