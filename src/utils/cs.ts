@@ -14,6 +14,7 @@ const cs = (function() {
   interface Link {
     type: string;
     link: string;
+    icon: string;
   }
 
   let linksList: Link[] = [];
