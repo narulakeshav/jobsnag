@@ -20,7 +20,7 @@ injectGlobal`
     display: flex;
     height: 100%;
     width: 100%;
-    max-height: 100%;
+    height: fit-content;
     max-width: 100%;
     box-sizing: border-box;
     font-size: 16px;
@@ -40,7 +40,7 @@ injectGlobal`
     flex: auto;
     align-self: stretch;
     max-width: 100%;
-    max-height: 100%;
+    height: fit-content;
     -webkit-overflow-scrolling: touch;
   }
   a {
