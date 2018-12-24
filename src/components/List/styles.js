@@ -9,10 +9,6 @@ import styled from 'styled-components';
  */
 export const ListWrapper = styled.ul`
   list-style: none;
-  min-width: 300px;
-
-  p {
-    font-size: 14px;
-    text-align: center;
-  }
+  min-width: 428px;
+  padding: 0.5rem 0 0.25rem;
 `;

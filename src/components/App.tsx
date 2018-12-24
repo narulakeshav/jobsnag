@@ -6,9 +6,10 @@ import * as React from 'react';
 /**
  * Internal Dependencies
  */
-import Input from './Input';
+import AddSite from './AddSite';
 import List from './List';
 import Field from './Field';
+import Empty from './Empty';
 
 /**
  * Interfaces
@@ -40,7 +41,6 @@ class App extends React.Component<{}, iState> {
   public componentDidMount = () => {
     chrome.storage.sync.get(['links'], (data) => {
       if (data.links) {
-        console.log('data.links:', data.links);
         this.setState({
           links: data.links
         });
@@ -104,17 +104,14 @@ class App extends React.Component<{}, iState> {
       ));
     }
 
-    return <p>Nothing here...</p>;
+    return <Empty />;
   }
 
   // Render <App />
   public render() {
     return (
       <div>
-        <Input
-          list={this.state.links}
-          addLinkToList={this.addLinkToList}
-        />
+        <AddSite addLinkToList={this.addLinkToList} />
         <List>
           {this.renderList()}
         </List>
