@@ -8,6 +8,11 @@ export default [
       { type: 'portfolio', name: 'Portfolio' },
       { type: 'other', name: 'Other' },
     ],
+    options: [
+      { type: 'gender', name: 'gender' },
+      { type: 'race', name: 'race' },
+      { type: 'veteran', name: 'veteran' },
+    ],
   },
   {
     name: 'greenhouse',

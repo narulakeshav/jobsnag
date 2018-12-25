@@ -10,6 +10,7 @@ import AddSite from './AddSite';
 import List from './List';
 import Field from './Field';
 import Empty from './Empty';
+import Options from './Options';
 
 /**
  * Interfaces
@@ -56,9 +57,11 @@ class App extends React.Component<{}, iState> {
    */
   private dataChangeListener = () => {
     chrome.storage.onChanged.addListener((changes) => {
-      this.setState({
-        links: changes.links.newValue
-      });
+      if (changes.links) {
+        this.setState({
+          links: changes.links.newValue
+        });
+      }
     });
   }
 
@@ -117,6 +120,7 @@ class App extends React.Component<{}, iState> {
         <List>
           {this.renderList()}
         </List>
+        <Options />
       </div>
     )
   }

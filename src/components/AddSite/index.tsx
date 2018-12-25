@@ -58,7 +58,7 @@ class Input extends React.PureComponent<iProps, iState> {
     link: '',
     type: '',
     icon: '',
-    showBtn: false,
+    showBtn: true,
     links: [],
   };
 
@@ -71,8 +71,12 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   private setMountState = (links: Link[]): void => {
     chrome.tabs.query({ active: true }, (tab: Object) => {
+      console.log('tab:', tab[0]);
+      console.log('links:', links);
       const url = this.formatURL(tab[0].url);
-      const link = links.filter((x: Link) => x.link === url);
+      const link = (links.length > 0)
+        ? links.filter((x: Link) => x.link === url)
+        : [];
       if (link.length === 0) {
         this.setState({
           value: 'Add this link as...',
@@ -96,8 +100,9 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   public componentDidMount = () => {
     chrome.storage.sync.get(['links'], (data: Data) => {
-      this.setState({ links: data.links });
-      this.setMountState(data.links);
+      const list = data.links || [];
+      this.setState({ links: list });
+      this.setMountState(data.links || []);
     });
 
     this.dataChangeListener();
@@ -109,8 +114,10 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   private dataChangeListener = () => {
     chrome.storage.onChanged.addListener((changes) => {
-      this.setState({ links: changes.links.newValue });
-      this.setMountState(changes.links.newValue);
+      if (changes.links) {
+        this.setState({ links: changes.links.newValue });
+      }
+      this.setMountState(changes.links.newValue || []);
     });
   }
 
@@ -249,9 +256,10 @@ class Input extends React.PureComponent<iProps, iState> {
 
   // Render <Input />
   public render() {
+    const { showBtn, link, value } = this.state;
     return (
-      <Wrapper showBtn={this.state.showBtn} disabled={this.state.link === ''}>
-        <TextLabel>{this.state.value}</TextLabel>
+      <Wrapper showBtn={showBtn} disabled={(link === '' && !showBtn)}>
+        <TextLabel>{value}</TextLabel>
         {this.renderDropdown()}
         {this.renderBtn()}
       </Wrapper>
