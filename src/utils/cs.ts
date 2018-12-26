@@ -157,8 +157,17 @@ const cs = (function() {
    * @param {number} index
    */
   const greenhouseConfig = (id: number, type: string, option: string, selectDOM: HTMLSelectElement, index: number): void => {
+    let i = id;
+    const sponsorItem = document.querySelector('#s2id_job_application_answers_attributes_3_boolean_value');
+    const educationItem = document.querySelector('#education_section');
+    if (sponsorItem) {
+      i += 1;
+    }
+    if (educationItem) {
+      i += 3;
+    }
     // @ts-ignore
-    const field: HTMLSpanElement = document.querySelectorAll('.select2-chosen')[id];
+    const field: HTMLSpanElement = document.querySelectorAll('.select2-chosen')[i];
     // @ts-ignore
     const parent: HTMLAnchorElement = field.parentNode;
     field.textContent = selectDOM[index].textContent;
