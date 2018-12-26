@@ -14,6 +14,8 @@ import {
   OptionsWrapper,
   OptionsToggle,
   ToggleBtn,
+  ToggleTitle,
+  ToggleSubtitle,
   OptionsCollapsable,
   FormGroup,
   Label,
@@ -33,7 +35,7 @@ const RACE = [
   { value: 'race-white', label: 'White' },
   { value: 'race-islander', label: 'Native Hawaiian/Other' },
   { value: 'race-more', label: '2+ Races' },
-  { value: 'race-decline', label: 'Decline' },
+  { value: 'race-identify', label: 'Decline' },
 ];
 
 const INFO = {
@@ -85,6 +87,9 @@ class Options extends React.Component<{}, iState> {
     showOptions: false,
   };
 
+  /**
+   * Get the list of options on mount
+   */
   public componentDidMount = () => {
     chrome.storage.sync.get(['options'], (data) => {
       if (data.options) {
@@ -120,6 +125,9 @@ class Options extends React.Component<{}, iState> {
     });
   }
 
+  /**
+   * Toggles the options view
+   */
   private toggleOptionView = () => {
     this.setState((prevState: iState) => ({
       showOptions: !prevState.showOptions
@@ -130,7 +138,7 @@ class Options extends React.Component<{}, iState> {
    * Selects the selected button option item
    * @param {SyntheticEvent} e
    */
-  onSelectBtnClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+  private onSelectBtnClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
     const key: string = e.currentTarget.getAttribute('data-for') || '';
     const value = e.currentTarget.getAttribute('data-item');
     if (value) {
@@ -147,7 +155,7 @@ class Options extends React.Component<{}, iState> {
    * Sets the race option on dropdown change
    * @param {SyntheticEvent} e
    */
-  onDropdownChange = (e: React.SyntheticEvent<HTMLSelectElement>): void => {
+  private onDropdownChange = (e: React.SyntheticEvent<HTMLSelectElement>): void => {
     const { value } = e.currentTarget;
     if (value) {
       this.setState({
@@ -165,7 +173,7 @@ class Options extends React.Component<{}, iState> {
    * @param {BtnItem[]} btnList
    * @param {string} btnFor
    */
-  renderBtnGroup = (btnList: BtnItem[], btnFor: string) => (
+  private renderBtnGroup = (btnList: BtnItem[], btnFor: string) => (
     // @ts-ignore
     <BtnWrapper split={"1fr ".repeat(btnList.length)}>
       {btnList.map((btn) => (
@@ -186,46 +194,57 @@ class Options extends React.Component<{}, iState> {
   /**
    * Renders race dropdown option
    */
-  renderRaceDropdown = () => (
+  private renderRaceDropdown = () => (
     <SelectOption value={this.state.race} onChange={this.onDropdownChange}>
       {RACE.map((op) => (
         <option key={op.value} value={op.value}>{op.label}</option>
       ))}
     </SelectOption>
-  )
+  );
+
+  /**
+   * Renders the collapsable
+   */
+  private renderCollapsable = () => (
+    // @ts-ignore
+    <OptionsCollapsable show={this.state.showOptions}>
+      <FormGroup>
+        <Label>Gender?</Label>
+        {this.renderBtnGroup(INFO.gender, 'gender')}
+      </FormGroup>
+      <FormGroup>
+        <Label>Hispanic?</Label>
+        {this.renderBtnGroup(INFO.hispanic, 'hispanic')}
+      </FormGroup>
+      <FormGroup>
+        <Label>Race/Ethnicity?</Label>
+        {this.renderRaceDropdown()}
+      </FormGroup>
+      <FormGroup>
+        <Label>Veteran?</Label>
+        {this.renderBtnGroup(INFO.veteran, 'veteran')}
+      </FormGroup>
+      <FormGroup>
+        <Label>Disable?</Label>
+        {this.renderBtnGroup(INFO.disability, 'disability')}
+      </FormGroup>
+    </OptionsCollapsable>
+  );
 
   // Render <Options />
   render() {
     return (
       <OptionsWrapper>
         <OptionsToggle>
-          Options
+          <div>
+            <ToggleTitle>Options</ToggleTitle>
+            <ToggleSubtitle>Options for race, disability, etc.</ToggleSubtitle>
+          </div>
           <ToggleBtn onClick={this.toggleOptionView}>
             {(this.state.showOptions) ? 'Hide' : 'Show'}
           </ToggleBtn>
         </OptionsToggle>
-        <OptionsCollapsable show={this.state.showOptions}>
-          <FormGroup>
-            <Label>Gender?</Label>
-            {this.renderBtnGroup(INFO.gender, 'gender')}
-          </FormGroup>
-          <FormGroup>
-            <Label>Hispanic?</Label>
-            {this.renderBtnGroup(INFO.hispanic, 'hispanic')}
-          </FormGroup>
-          <FormGroup>
-            <Label>Race/Ethnicity?</Label>
-            {this.renderRaceDropdown()}
-          </FormGroup>
-          <FormGroup>
-            <Label>Veteran?</Label>
-            {this.renderBtnGroup(INFO.veteran, 'veteran')}
-          </FormGroup>
-          <FormGroup>
-            <Label>Disable?</Label>
-            {this.renderBtnGroup(INFO.disability, 'disability')}
-          </FormGroup>
-        </OptionsCollapsable>
+        {this.renderCollapsable()}
       </OptionsWrapper>
     );
   }

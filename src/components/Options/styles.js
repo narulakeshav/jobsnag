@@ -12,12 +12,42 @@ export const OptionsWrapper = styled.section`
   padding: 0;
 `;
 
+/**
+ * OptionsToggle
+ * @type div
+ */
 export const OptionsToggle = styled.div`
-  padding: 10px 1rem;
-  font-weight: 700;
-  font-size: 16px;
+  padding: 6px 2rem 6px 1rem;
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  grid-gap: 1rem;
 `;
 
+/**
+ * ToggleTitle
+ * @type h3
+ */
+export const ToggleTitle = styled.h3`
+  font-weight: 700;
+  font-size: 16px;
+  color: #222222;
+`;
+
+/**
+ * ToggleSubtitle
+ * @type p
+ */
+export const ToggleSubtitle = styled.p`
+  font-weight: 500;
+  font-size: 12px;
+  color: #888888;
+  line-height: 100%;
+`;
+
+/**
+ * ToggleBtn
+ * @type button
+ */
 export const ToggleBtn = styled.button`
   float: right;
   color: #999;
@@ -33,6 +63,10 @@ export const ToggleBtn = styled.button`
   }
 `;
 
+/**
+ * OptionsCollapsable
+ * @type div
+ */
 export const OptionsCollapsable = styled.div`
   padding: 1rem;
   display: ${props => (props.show ? 'grid' : 'none')};
@@ -40,6 +74,10 @@ export const OptionsCollapsable = styled.div`
   grid-gap: 1rem;
 `;
 
+/**
+ * FormGroup
+ * @type div
+ */
 export const FormGroup = styled.div`
   padding: 2px 0 4px;
 `;
@@ -83,6 +121,10 @@ export const SelectBtn = styled.button`
   }
 `;
 
+/**
+ * SelectOption
+ * @type select
+ */
 export const SelectOption = styled.select`
   background: #f2f4fa;
   border-radius: 40px;
