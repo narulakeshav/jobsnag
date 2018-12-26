@@ -71,8 +71,6 @@ class Input extends React.PureComponent<iProps, iState> {
    */
   private setMountState = (links: Link[]): void => {
     chrome.tabs.query({ active: true }, (tab: Object) => {
-      console.log('tab:', tab[0]);
-      console.log('links:', links);
       const url = this.formatURL(tab[0].url);
       const link = (links.length > 0)
         ? links.filter((x: Link) => x.link === url)
@@ -115,7 +113,9 @@ class Input extends React.PureComponent<iProps, iState> {
   private dataChangeListener = () => {
     chrome.storage.onChanged.addListener((changes) => {
       if (changes.links) {
-        this.setState({ links: changes.links.newValue });
+        if (changes.links.newValue) {
+          this.setState({ links: changes.links.newValue });
+        }
       }
       this.setMountState(changes.links.newValue || []);
     });
