@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Sociallink",
-  "version": "1.0.0",
-  "description": "Automatically paste social links in Lever and Greenhouse",
+  "name": "Jobsnag",
+  "version": "0.0.1",
+  "description": "Autofill social links and user info in Lever & Greenhouse",
 	"author": "Keshav Narula <narulakeshav13@gmail.com> (http://narulakeshav.com)",
   "icons": {
     "16": "icon-16.png",
