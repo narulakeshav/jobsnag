@@ -70,7 +70,10 @@ class Input extends React.PureComponent<iProps, iState> {
    * @param {Link[]} links: list of links
    */
   private setMountState = (links: Link[]): void => {
-    chrome.tabs.query({ active: true }, (tab: Object) => {
+    chrome.tabs.query({
+      active: true,
+      windowId: chrome.windows.WINDOW_ID_CURRENT
+    }, (tab: Object) => {
       const url = this.formatURL(tab[0].url);
       const link = (links.length > 0)
         ? links.filter((x: Link) => x.link === url)
@@ -115,9 +118,9 @@ class Input extends React.PureComponent<iProps, iState> {
       if (changes.links) {
         if (changes.links.newValue) {
           this.setState({ links: changes.links.newValue });
+          this.setMountState(changes.links.newValue || []);
         }
       }
-      this.setMountState(changes.links.newValue || []);
     });
   }
 

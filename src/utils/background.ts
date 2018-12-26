@@ -21,7 +21,7 @@ const bg = (function () {
     // Greenhouse
     if (url.includes('boards.greenhouse.io')) {
       return {
-        isApp: url.endsWith('#app'),
+        isApp: true,
         type: 'greenhouse'
       };
     }
@@ -29,7 +29,7 @@ const bg = (function () {
     // Lever
     if (url.includes('jobs.lever.co')) {
       return {
-        isApp: url.endsWith('apply'),
+        isApp: url.includes('/apply'),
         type: 'lever'
       };
     }
@@ -50,7 +50,10 @@ const bg = (function () {
  * urls (hostSuffix).
  */
 chrome.webNavigation.onCompleted.addListener(() => {
-  chrome.tabs.query({ active: true }, tabs => {
+  chrome.tabs.query({
+    active: true,
+    windowId: chrome.windows.WINDOW_ID_CURRENT
+  }, tabs => {
     if (tabs.length > 0) {
       const tab: any = tabs[0];
       const site: any = bg.isFilling(tab.url);
