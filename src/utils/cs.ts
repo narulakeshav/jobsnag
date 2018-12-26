@@ -42,7 +42,6 @@ const cs = (function() {
   }
 
   /**
-   * @private getLinkFor
    * Gets the link for a specific site "type"
    * @param {string} type
    */
@@ -52,19 +51,48 @@ const cs = (function() {
   };
 
   /**
-   * @private getOptionFor
    * Gets the link for a specific site "type"
    * @param {string} type
    */
-  const getOptionFor = (type: string): string => {
-    let op = optionList[type];
-    op = op.replace(`${type}-`, '');
+  const getOptionFor = (board: string, type: string): string => {
+    let op = optionList[type].replace(`${type}-`, '');
     op = op.replace('-', ' ');
+
+    // On greenhouse, change "decline" to "wish" on vet/disability
+    if (board === 'greenhouse') {
+      if ((type === 'veteran' || type === 'disability') && op === 'decline') {
+        return 'wish';
+      }
+      if (type === 'veteran') {
+        if (op !== '' && op !== 'wish' && !op.includes('not')) {
+          return 'identify';
+        }
+      }
+    }
     return op;
   };
 
   /**
-   * @private setConfig
+   * Gets the selector based on the board and
+   * the type.
+   *
+   * @param {string} board
+   * @param {string} type: options || links
+   * @param {string} name: race|gender|veteran
+   */
+  const getSelector = (board: string, type: string, name: string): string => {
+    if (board === 'greenhouse') {
+      return (type === 'links')
+        ? `[autocomplete="custom-question-${name}"]`
+        : `[name="job_application[${name}]"]`
+    } else {
+      return (type === 'links')
+        ? `[name="urls[${name}]"]`
+        : `[name="eeo[${name}]"]`;
+    }
+  }
+
+  /**
    * Maps the social site type to input fields on the
    * job boards.
    *
@@ -73,17 +101,25 @@ const cs = (function() {
    * @param {string} name
    */
   const setLinksConfig = (board: string, type: string, name: string): void => {
-    const query = (board === 'greenhouse')
-      ? `[autocomplete="custom-question-${name}"]`
-      : `[name="urls[${name}]"]`;
+    const selector: string = getSelector(board, 'links', name);
+    const input: any = document.querySelectorAll(selector)[0];
+    const link: string = getLinkFor(type);
 
-    const link = getLinkFor(type);
-    const input: any = document.querySelectorAll(query)[0];
     if (input && link) {
       input.value = link;
       input.style.background = '#fff7d6';
       input.style.borderColor = '#f4dc94';
     }
+  }
+
+  /**
+   * Filters Select to only return children with <option> tagName
+   * @param {NodeList} selectList
+   */
+  const filterSelectList = (selectList: NodeList): Array<Object> => {
+    return Array.from(selectList).filter((op: HTMLOptionElement) => {
+      return op.tagName === 'OPTION'; // push only <option>
+    });
   }
 
   /**
@@ -93,56 +129,90 @@ const cs = (function() {
    * @param {string} selectedOption: string
    * @param {NodeList} sOption: site's select option
    */
-  const setOptionItem = (selectedOption: string, sOption: NodeList) => {
+  const setOptionItem = (board: string, selectedOption: string, sOption: NodeList): number => {
+    const list: Array<Object> = filterSelectList(sOption);
     let i = -1;
-    Array.from(sOption).forEach((op: Node) => {
-      const index = Array.from(sOption).indexOf(op);
-      if (op.textContent) {
-        const text = op.textContent.toLowerCase();
-        if (text === selectedOption) {
-          i = index;
-        }
-
-        if (i === -1) {
-          if (text.includes(selectedOption)) {
-            i = index;
+    // Find the matching <option> within <select>
+    list.map((op: HTMLOptionElement) => {
+      if (i === -1) {
+        if (op.textContent && op.tagName === 'OPTION') {
+          const text = op.textContent.toLowerCase();
+          if (text === selectedOption || text.includes(selectedOption)) {
+            i = list.indexOf(op); // current index
           }
         }
       }
     });
 
-    console.log('__AQI__:', sOption[i]);
     return i;
   };
 
-  const setOptionsConfig = (board: string, type: string, name: string): void => {
-    const query = (board === 'lever')
-      ? `[name="eeo[${name}]"]`
-      : ``;
-    const selectDOM: any = document.querySelectorAll(query)[0];
-    let option = getOptionFor(type);
-    console.log('__TYPE__', type, '__OPTION__:', option);
-    if (selectDOM && option) {
-      const index = setOptionItem(option, selectDOM.childNodes);
-      selectDOM.options[index].selected = 'selected';
-      selectDOM.style.background = '#fff7d6';
-      selectDOM.style.borderColor = '#f4dc94';
+  /**
+   * Sets greenhouse configuration to update fields
+   *
+   * @param {number} id
+   * @param {string} type
+   * @param {string} option
+   * @param {HTMLSelectElement} selectDOM
+   * @param {number} index
+   */
+  const greenhouseConfig = (id: number, type: string, option: string, selectDOM: HTMLSelectElement, index: number): void => {
+    // @ts-ignore
+    const field: HTMLSpanElement = document.querySelectorAll('.select2-chosen')[id];
+    // @ts-ignore
+    const parent: HTMLAnchorElement = field.parentNode;
+    field.textContent = selectDOM[index].textContent;
+    field.style.background = '#fff7d6';
+    // Update parent bg
+    parent.style.background = '#fff7d6';
+    parent.style.borderColor = '#f4dc94';
+    // @ts-ignore
+    parent.lastChild.style.background = '#fff7d6';
+
+    // Show the "race" list if "no" is selected for hispanic
+    if (type === 'hispanic' && option === 'no') {
+      // @ts-ignore
+      const raceDOM: HTMLDivElement = document.querySelector('#race_dropdown_container');
+      raceDOM.style.display = 'block';
     }
   }
 
   /**
-   * @private fillApp
+   * Sets the configurations for user's option preference
+   *
+   * @param {string} board
+   * @param {string} type
+   * @param {string} name
+   * @param {number} id
+   */
+  const setOptionsConfig = (board: string, type: string, name: string, id: number): void => {
+    const selector = getSelector(board, 'options', name);
+    const selectDOM: any = document.querySelector(selector);
+    const option = getOptionFor(board, type);
+
+    if (selectDOM && option) {
+      // get index of option to select in SELECT
+      const index = setOptionItem(board, option, selectDOM.childNodes);
+      selectDOM.options[index].setAttribute('selected', 'selected');
+      selectDOM.style.background = '#fff7d6';
+      selectDOM.style.borderColor = '#f4dc94';
+
+      if (board === 'greenhouse') {
+        greenhouseConfig(id, type, option, selectDOM, index);
+      }
+    }
+  }
+
+  /**
    * Fill the input fields for the current board
    * @param {string} board
    */
-  const fillApp = (board: string) => {
+  const fillApp = (board: string): void => {
     const currentBoard = JobBoard.filter((b) => b.name === board);
     currentBoard.map((b) => {
-      // set config for links
       b.links.map(val => setLinksConfig(board, val.type, val.name));
-      // set config for options
       // @ts-ignore
-      b.options.map(val => setOptionsConfig(board, val.type, val.name));
+      b.options.map(val => setOptionsConfig(board, val.type, val.name, val.id));
     });
   };
 
@@ -158,17 +228,9 @@ const cs = (function() {
 chrome.runtime.onMessage.addListener(res => {
   if (res) {
     chrome.storage.sync.get(['links', 'options'], data => {
-      console.log(data);
-      if (data.links) {
-        cs.setLinks(data.links);
-      }
-      if (data.options) {
-        cs.setOptions(data.options);
-      }
-
-      if (data.links || data.options) {
-        cs.fillApp(res.site);
-      }
+      if (data.links) cs.setLinks(data.links);
+      if (data.options) cs.setOptions(data.options);
+      if (data.links || data.options) cs.fillApp(res.site);
     });
   }
 });
