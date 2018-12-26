@@ -20,5 +20,12 @@ export default [
       { type: 'linkedin', name: 'linkedin-profile' },
       { type: 'portfolio', name: 'website' },
     ],
+    options: [
+      { type: 'gender', name: 'gender', id: 0 },
+      { type: 'hispanic', name: 'hispanic_ethnicity', id: 1 },
+      { type: 'race', name: 'race', id: 2 },
+      { type: 'veteran', name: 'veteran_status', id: 3 },
+      { type: 'disability', name: 'disability_status', id: 4 },
+    ],
   },
 ];
