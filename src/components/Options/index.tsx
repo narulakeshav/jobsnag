@@ -33,7 +33,7 @@ const RACE = [
   { value: 'race-black', label: 'Black/African American' },
   { value: 'race-hispanic', label: 'Hispanic/Latino' },
   { value: 'race-white', label: 'White' },
-  { value: 'race-islander', label: 'Native Hawaiian/Other' },
+  { value: 'race-islander', label: 'Native Hawaiian/Pacific Islander' },
   { value: 'race-more', label: '2+ Races' },
   { value: 'race-identify', label: 'Decline' },
 ];
@@ -209,23 +209,23 @@ class Options extends React.Component<{}, iState> {
     // @ts-ignore
     <OptionsCollapsable show={this.state.showOptions}>
       <FormGroup>
-        <Label>Gender?</Label>
+        <Label>Gender</Label>
         {this.renderBtnGroup(INFO.gender, 'gender')}
       </FormGroup>
       <FormGroup>
-        <Label>Hispanic?</Label>
+        <Label>Hispanic</Label>
         {this.renderBtnGroup(INFO.hispanic, 'hispanic')}
       </FormGroup>
       <FormGroup>
-        <Label>Race/Ethnicity?</Label>
+        <Label>Race</Label>
         {this.renderRaceDropdown()}
       </FormGroup>
       <FormGroup>
-        <Label>Veteran?</Label>
+        <Label>Veteran</Label>
         {this.renderBtnGroup(INFO.veteran, 'veteran')}
       </FormGroup>
       <FormGroup>
-        <Label>Disable?</Label>
+        <Label>Disable</Label>
         {this.renderBtnGroup(INFO.disability, 'disability')}
       </FormGroup>
     </OptionsCollapsable>
