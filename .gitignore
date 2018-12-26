@@ -2,3 +2,5 @@
 node_modules
 dist
 .vscode/
+jobsnag.zip
+.DS_Store
