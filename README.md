@@ -1,7 +1,9 @@
 ![Screenshot](https://i.imgur.com/F2XrZmi.jpg)
 
 # Jobsnag
-Chrome Extension that autofill social links and user info in Lever & Greenhouse. [VIEW IT ON CHROME WEB STORE](https://chrome.google.com/webstore/detail/jobsnag/aningjgnbfldgkeemdbnifpfebhmkikc)
+Chrome Extension that autofill social links and user info in Lever & Greenhouse.
+
+[View it on the Chrome webstore!](https://chrome.google.com/webstore/detail/jobsnag/aningjgnbfldgkeemdbnifpfebhmkikc)
 
 ![Screenshot](https://i.imgur.com/PM6oQmJ.png)
 
