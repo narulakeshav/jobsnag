@@ -42,8 +42,8 @@ const CONFIG = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  CONFIG.context = path.resolve(__dirname, 'src/index.tsx');
-  CONFIG.devtool = 'false';
+  // CONFIG.context = path.resolve(__dirname, 'src/index.tsx');
+  // CONFIG.devtool = 'false';
 }
 
 module.exports = CONFIG;

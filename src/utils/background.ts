@@ -4,10 +4,10 @@
  * content script if the user is on either
  * of the urls (job boards).
  */
-const bg = (function () {
+const bg = (function() {
   const url = [
     { hostSuffix: 'jobs.lever.co' },
-    { hostSuffix: 'boards.greenhouse.io' }
+    { hostSuffix: 'boards.greenhouse.io' },
   ];
 
   /**
@@ -22,7 +22,7 @@ const bg = (function () {
     if (url.includes('boards.greenhouse.io')) {
       return {
         isApp: true,
-        type: 'greenhouse'
+        type: 'greenhouse',
       };
     }
 
@@ -30,7 +30,7 @@ const bg = (function () {
     if (url.includes('jobs.lever.co')) {
       return {
         isApp: url.includes('/apply'),
-        type: 'lever'
+        type: 'lever',
       };
     }
     return false;
@@ -39,7 +39,7 @@ const bg = (function () {
   // Return run() as a public method on background
   return {
     isFilling: isFillingApp,
-    url
+    url,
   };
 })();
 
@@ -49,19 +49,25 @@ const bg = (function () {
  * add a listener on the sites that match the
  * urls (hostSuffix).
  */
-chrome.webNavigation.onCompleted.addListener(() => {
-  chrome.tabs.query({
-    active: true,
-    windowId: chrome.windows.WINDOW_ID_CURRENT
-  }, tabs => {
-    if (tabs.length > 0) {
-      const tab: any = tabs[0];
-      const site: any = bg.isFilling(tab.url);
-      if (site.isApp) {
-        chrome.tabs.sendMessage(tab.id, { site: site.type });
-      }
-    }
-  });
-}, {
-  url: bg.url
-});
+chrome.webNavigation.onCompleted.addListener(
+  () => {
+    chrome.tabs.query(
+      {
+        active: true,
+        windowId: chrome.windows.WINDOW_ID_CURRENT,
+      },
+      tabs => {
+        if (tabs.length > 0) {
+          const tab: any = tabs[0];
+          const site: any = bg.isFilling(tab.url);
+          if (site.isApp) {
+            chrome.tabs.sendMessage(tab.id, { site: site.type });
+          }
+        }
+      },
+    );
+  },
+  {
+    url: bg.url,
+  },
+);

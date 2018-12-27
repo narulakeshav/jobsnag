@@ -19,13 +19,13 @@ interface iProps {
   link: string;
   icon: string;
   removeLink: Function;
-};
+}
 
 /**
  * Generates the icon for the site type
  * @param {sting } icon
  */
-const genIcon = (icon: string) => {
+export const genIcon = (icon: string) => {
   switch (icon) {
     case 'twitter':
     case 'linkedin':
@@ -41,19 +41,32 @@ const genIcon = (icon: string) => {
  * Field item that contains social link
  * @param props
  */
-const Field = (props: iProps) => (
-  <Item>
-    <Icon src={props.icon} />
-    <SocialLink href={props.link} target="_blank">{props.link}</SocialLink>
-    <CopyToClipboard text={props.link}>
-      <CopyBtn><span>Copy</span></CopyBtn>
-    </CopyToClipboard>
-    <DeleteBtn onClick={() => props.removeLink({
-      type: props.type,
-      link: props.link
-    })}><i className="fa fa-trash"/></DeleteBtn>
-  </Item>
-);
+const Field = (props: iProps) => {
+  const { icon, link, removeLink, type } = props;
+  return (
+    <Item>
+      <Icon src={icon} />
+      <SocialLink href={link} target="_blank">
+        {link}
+      </SocialLink>
+      <CopyToClipboard text={link}>
+        <CopyBtn>
+          <span>Copy</span>
+        </CopyBtn>
+      </CopyToClipboard>
+      <DeleteBtn
+        onClick={() =>
+          removeLink({
+            type,
+            link,
+          })
+        }
+      >
+        <i className="fa fa-trash" />
+      </DeleteBtn>
+    </Item>
+  );
+};
 
 // Export
 export default Field;

@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack --config webpack.config.dev.js --mode development --color --watch",
-    "build": "NODE_ENV=production webpack -p",
-    "lint": "eslint --ext .js,.tsx ."
+    "build": "NODE_ENV=production webpack --config webpack.config.dev.js -p",
+    "lint": "eslint --ext .js,.tsx,.ts ."
   },
   "dependencies": {
     "@babel/runtime": "^7.2.0",
@@ -46,7 +46,6 @@
     "prettier": "^1.15.3",
     "react-devtools": "^3.4.3",
     "typescript": "^3.2.2",
-    "typescript-eslint-parser": "^21.0.2",
     "webpack": "^4.28.2",
     "webpack-cli": "^3.1.2"
   }
