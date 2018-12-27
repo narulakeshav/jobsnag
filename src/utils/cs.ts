@@ -39,7 +39,7 @@ const cs = (function() {
    */
   const setOptions = (options: Option[]): void => {
     optionList = options;
-  }
+  };
 
   /**
    * Gets the link for a specific site "type"
@@ -82,15 +82,14 @@ const cs = (function() {
    */
   const getSelector = (board: string, type: string, name: string): string => {
     if (board === 'greenhouse') {
-      return (type === 'links')
+      return type === 'links'
         ? `[autocomplete="custom-question-${name}"]`
-        : `[name="job_application[${name}]"]`
-    } else {
-      return (type === 'links')
-        ? `[name="urls[${name}]"]`
-        : `[name="eeo[${name}]"]`;
+        : `[name="job_application[${name}]"]`;
     }
-  }
+    return type === 'links'
+      ? `[name="urls[${name}]"]`
+      : `[name="eeo[${name}]"]`;
+  };
 
   /**
    * Maps the social site type to input fields on the
@@ -110,17 +109,16 @@ const cs = (function() {
       input.style.background = '#fff7d6';
       input.style.borderColor = '#f4dc94';
     }
-  }
+  };
 
   /**
    * Filters Select to only return children with <option> tagName
    * @param {NodeList} selectList
    */
-  const filterSelectList = (selectList: NodeList): Array<Object> => {
-    return Array.from(selectList).filter((op: HTMLOptionElement) => {
-      return op.tagName === 'OPTION'; // push only <option>
-    });
-  }
+  const filterSelectList = (selectList: NodeList): Array<Object> =>
+    Array.from(selectList).filter(
+      (op: HTMLOptionElement) => op.tagName === 'OPTION', // push only <option>
+    );
 
   /**
    * Sets the expected option from the selected
@@ -129,7 +127,11 @@ const cs = (function() {
    * @param {string} selectedOption: string
    * @param {NodeList} sOption: site's select option
    */
-  const setOptionItem = (board: string, selectedOption: string, sOption: NodeList): number => {
+  const setOptionItem = (
+    board: string,
+    selectedOption: string,
+    sOption: NodeList,
+  ): number => {
     const list: Array<Object> = filterSelectList(sOption);
     let i = -1;
     // Find the matching <option> within <select>
@@ -156,9 +158,17 @@ const cs = (function() {
    * @param {HTMLSelectElement} selectDOM
    * @param {number} index
    */
-  const greenhouseConfig = (id: number, type: string, option: string, selectDOM: HTMLSelectElement, index: number): void => {
+  const greenhouseConfig = (
+    id: number,
+    type: string,
+    option: string,
+    selectDOM: HTMLSelectElement,
+    index: number,
+  ): void => {
     let i = id;
-    const sponsorItem = document.querySelector('#s2id_job_application_answers_attributes_3_boolean_value');
+    const sponsorItem = document.querySelector(
+      '#s2id_job_application_answers_attributes_3_boolean_value',
+    );
     const educationItem = document.querySelector('#education_section');
     if (sponsorItem) {
       i += 1;
@@ -167,7 +177,9 @@ const cs = (function() {
       i += 3;
     }
     // @ts-ignore
-    const field: HTMLSpanElement = document.querySelectorAll('.select2-chosen')[i];
+    const field: HTMLSpanElement = document.querySelectorAll('.select2-chosen')[
+      i
+    ];
     // @ts-ignore
     const parent: HTMLAnchorElement = field.parentNode;
     field.textContent = selectDOM[index].textContent;
@@ -181,10 +193,12 @@ const cs = (function() {
     // Show the "race" list if "no" is selected for hispanic
     if (type === 'hispanic' && option === 'no') {
       // @ts-ignore
-      const raceDOM: HTMLDivElement = document.querySelector('#race_dropdown_container');
+      const raceDOM: HTMLDivElement = document.querySelector(
+        '#race_dropdown_container',
+      );
       raceDOM.style.display = 'block';
     }
-  }
+  };
 
   /**
    * Sets the configurations for user's option preference
@@ -194,7 +208,12 @@ const cs = (function() {
    * @param {string} name
    * @param {number} id
    */
-  const setOptionsConfig = (board: string, type: string, name: string, id: number): void => {
+  const setOptionsConfig = (
+    board: string,
+    type: string,
+    name: string,
+    id: number,
+  ): void => {
     const selector = getSelector(board, 'options', name);
     const selectDOM: any = document.querySelector(selector);
     const option = getOptionFor(board, type);
@@ -210,15 +229,15 @@ const cs = (function() {
         greenhouseConfig(id, type, option, selectDOM, index);
       }
     }
-  }
+  };
 
   /**
    * Fill the input fields for the current board
    * @param {string} board
    */
   const fillApp = (board: string): void => {
-    const currentBoard = JobBoard.filter((b) => b.name === board);
-    currentBoard.map((b) => {
+    const currentBoard = JobBoard.filter(b => b.name === board);
+    currentBoard.map(b => {
       b.links.map(val => setLinksConfig(board, val.type, val.name));
       // @ts-ignore
       b.options.map(val => setOptionsConfig(board, val.type, val.name, val.id));

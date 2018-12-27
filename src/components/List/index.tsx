@@ -20,11 +20,10 @@ interface iProps {
  * social field item
  * @param props
  */
-const List = (props: iProps) => (
-  <ListWrapper>
-    {props.children}
-  </ListWrapper>
-);
+const List = (props: iProps) => {
+  const { children } = props;
+  return <ListWrapper>{children}</ListWrapper>;
+};
 
 // Export
 export default List;

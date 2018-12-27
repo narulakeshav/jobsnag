@@ -2,7 +2,9 @@
   "presets": [
     "@babel/preset-react",
     ["@babel/preset-env", { "modules": false }],
-    "@babel/preset-typescript"
+    ["@babel/preset-typescript", {
+      "allExtensions": true
+    }]
   ],
   "plugins": [
     [

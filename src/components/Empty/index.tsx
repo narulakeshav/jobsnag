@@ -19,10 +19,7 @@ import AddIcon from '../../../public/add.png';
 const Empty = () => (
   // @ts-ignore
   <EmptyContainer icon={AddIcon}>
-    <SVG
-      src={Icon}
-      alt="Nothing here"
-    />
+    <SVG src={Icon} alt="Nothing here" />
     <Message>Adds links to see them here...</Message>
   </EmptyContainer>
 );

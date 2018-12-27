@@ -11,8 +11,9 @@
         "trailingComma": "all"
       }
     ],
-    "import/prefer-default-export": 0,
-    "no-nested-ternary": 0
+    "import/prefer-default-export": "off",
+    "no-nested-ternary": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".ts", ".tsx"] }]
   },
   "env": {
     "browser": true
